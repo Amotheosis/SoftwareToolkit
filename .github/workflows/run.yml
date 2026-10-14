@@ -1,0 +1,36 @@
+name: Quadratic Equation Solver
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:   # позволяет запускать вручную кнопкой
+
+jobs:
+  console-mode:
+    name: Вариант (а) - консоль
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Компиляция
+        run: gcc quadratic.c -o quadratic -lm
+      - name: Запуск с вводом из консоли
+        run: |
+          echo "1 -5 6" | ./quadratic
+
+  file-mode:
+    name: Вариант (б) - файлы
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Компиляция
+        run: gcc quadratic.c -o quadratic -lm
+      - name: Запуск с файлами
+        run: |
+          ./quadratic input.txt output.txt
+          echo "========== Содержимое output.txt =========="
+          cat output.txt
+      - name: Сохранить результат
+        uses: actions/upload-artifact@v4
+        with:
+          name: solution-output
+          path: output.txt
